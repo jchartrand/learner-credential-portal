@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/learner-credential-portal/static/css/main.33ca447f.css",
-    "main.js": "/learner-credential-portal/static/js/main.55d0347b.js",
+    "main.js": "/learner-credential-portal/static/js/main.ae16c71b.js",
     "static/js/787.33a3a088.chunk.js": "/learner-credential-portal/static/js/787.33a3a088.chunk.js",
     "static/media/DCC_navbar-logo.png": "/learner-credential-portal/static/media/DCC_navbar-logo.1ab51c81034702c2145c.png",
     "index.html": "/learner-credential-portal/index.html",
     "main.33ca447f.css.map": "/learner-credential-portal/static/css/main.33ca447f.css.map",
-    "main.55d0347b.js.map": "/learner-credential-portal/static/js/main.55d0347b.js.map",
+    "main.ae16c71b.js.map": "/learner-credential-portal/static/js/main.ae16c71b.js.map",
     "787.33a3a088.chunk.js.map": "/learner-credential-portal/static/js/787.33a3a088.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.33ca447f.css",
-    "static/js/main.55d0347b.js"
+    "static/js/main.ae16c71b.js"
   ]
 }
