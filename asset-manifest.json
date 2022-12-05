@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/learner-credential-portal/static/css/main.33ca447f.css",
-    "main.js": "/learner-credential-portal/static/js/main.523baebd.js",
+    "main.css": "/learner-credential-portal/static/css/main.944e9ea5.css",
+    "main.js": "/learner-credential-portal/static/js/main.cf874b7d.js",
     "static/js/787.33a3a088.chunk.js": "/learner-credential-portal/static/js/787.33a3a088.chunk.js",
     "static/media/DCC_navbar-logo.png": "/learner-credential-portal/static/media/DCC_navbar-logo.1ab51c81034702c2145c.png",
     "index.html": "/learner-credential-portal/index.html",
-    "main.33ca447f.css.map": "/learner-credential-portal/static/css/main.33ca447f.css.map",
-    "main.523baebd.js.map": "/learner-credential-portal/static/js/main.523baebd.js.map",
+    "main.944e9ea5.css.map": "/learner-credential-portal/static/css/main.944e9ea5.css.map",
+    "main.cf874b7d.js.map": "/learner-credential-portal/static/js/main.cf874b7d.js.map",
     "787.33a3a088.chunk.js.map": "/learner-credential-portal/static/js/787.33a3a088.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.33ca447f.css",
-    "static/js/main.523baebd.js"
+    "static/css/main.944e9ea5.css",
+    "static/js/main.cf874b7d.js"
   ]
 }
