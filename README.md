@@ -10,6 +10,8 @@ The 'portal' is really a coordination of three pieces:
 
 **LCP** - Learner Credential Portal (i.e, this repo)
 
+### LCP
+
 The portal (LCP) itself (i.e., this Github repo) is just a very basic React App with two pages:
 
 1. src/routes/SignIn.jsx - Could handle the GUI part of authentication using eduGain, but doesn't have to if the student authenticates somewhere else.
@@ -21,15 +23,23 @@ The portal (LCP) itself (i.e., this Github repo) is just a very basic React App 
 
 **NOTE:**  there is an addtional page, src/routes/Demo.jsx that opens the list page for precanned users.
 
-The issuer (LCI) is a node express app.  It has three endpoints:
+### LCI
 
-**/:listID** which returns the list of credentials for a student, complete with display data for each cred, and with deeplinks and endpoints (one per cred) from which to retrieve the signed cred.  This is the URL that is passed into the LCP credentialList page as a request parameter.
+The issuer (LCI) is a node express app. Every issuer hosts one of these locally within their institution. It has three endpoints:
+
+#### **/:listID** (GET)
+
+Returns the list of credentials for a student, complete with display data for each cred, and with deeplinks and endpoints (one per cred) from which to retrieve the signed cred.  This is the URL that is passed into the LCP credentialList page as a request parameter.
 	
-**:listID/:credID** which returns the signed credential in response to a DIDAuth (these are the uris that are included in the list that /:listID provides to the portal).
+#### /**:listID/:credID** (POST)
+
+Returns the signed credential in response to a posted DIDAuth (these are the uris that are included in the list that /:listID provides to the portal).
 
 Both of those endpoints (/:listID and :/listID/credentialID) are ephemeral.  They only exist for some period (e.g., ten minutes), from the time the third endpoint (/handle) is called:
 
-**/handle** is called to kick off a given credential exchange session.  It is meant to be called after authentication, and once the issuer has retrieved the credential data from its backend store.  It is called internally by the issuer, and so is not public.  Once called, /handle takes care of all the rest of the exchange with the wallet including challenge management and construction of deep links, etc.
+#### **/handle** (POST)
+
+Called to kick off a given credential exchange session.  It is meant to be called after authentication, and once the issuer has retrieved the credential data from its backend store.  It is called internally by the issuer, and so is not public.  Once called, /handle takes care of all the rest of the exchange with the wallet including challenge management and construction of deep links, etc.
 
 The handle call expects a posting of all the data needed for a given student's credentials - all the data to both display the list of credentials, and also to construct a VC for each credential.  This endpoint (/handle) is really the meat of the portal.  It takes the data that is passed to it and stores it in a key-value store, with one entry per credential where the 'key' of each entry is a new UUID generated for each.  The key also acts as the challenge.  The /handle call returns a URL that can be used to open (e.g, as a redirect) the LCP with a request parameter on it that is the /:ist uri that the portal can call to get the list of credentials.  Like this exmaple:
 
