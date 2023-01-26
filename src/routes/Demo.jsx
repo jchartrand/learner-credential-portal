@@ -38,30 +38,21 @@ export default function Demo() {
           </Typography>
           <Box sx={{ mt: 1 }}>
           <Button
+              onClick={ () => { window.location.href = 'https://lci.onrender.com/demo/ian' } }
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Ian Malcom - using Render service https://lci.onrender.com/demo/ian
+            </Button>
+            <Button
               onClick={ () => { window.location.href = 'http://localhost:4000/demo/ian' } }
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Ian Malcom - various demo credentials
+              Ian Malcom - using localhost:4000/demo/ian
             </Button>
-            <Button
-              onClick={ () => { window.location.href = 'http://localhost:4000/demo/ada' } }
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Ada Lovelace - Computer Progammer
-            </Button>
-            <Button
-              onClick={ () => { window.location.href = 'http://localhost:4000/demo/sommerville' } }
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-            >
-              Mary Sommerville - Scientist
-            </Button>
-        
           </Box>
         </Box>
       </Container>
