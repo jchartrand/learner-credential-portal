@@ -15,20 +15,20 @@ import SignIn from './routes/SignIn';
 
 const router = createBrowserRouter([
   {
-    path: "/learner-credential-portal",
+    path: "/",
     element: <Root/>,
     errorElement: <ErrorPage/>,
     children: [
       {
-        path: "/learner-credential-portal",
+        path: "/",
         element: <SignIn/>,
       },
       {
-        path: "/learner-credential-portal/credentials",
+        path: "/credentials",
         element: <CredentialList/>,
       },
       {
-        path: "/learner-credential-portal/demo",
+        path: "/demo",
         element: <Demo/>,
       }
     ],

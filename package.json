@@ -2,7 +2,7 @@
   "name": "learner-credential-portal",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://jchartrand.github.io/learner-credential-portal",
+  "homepage": "https://lcp.onrender.com",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -20,7 +20,7 @@
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
-    "start": "export PORT=3005 && react-scripts start",
+    "start": "react-scripts start",
     "start-https": "PORT=3005 HTTPS=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

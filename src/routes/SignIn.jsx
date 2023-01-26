@@ -38,7 +38,7 @@ export default function SignIn() {
     });
    // could later have this make a fetch call, setting an Authorization bearer token
    // maybe from eduGain, then redirecting to the returned url.
-    window.open(`http://localhost:4000/demo/${data.get('password')}`)
+    window.open(`https://lci.onrender.com/demo/${data.get('password')}`)
 }
 
   return (
