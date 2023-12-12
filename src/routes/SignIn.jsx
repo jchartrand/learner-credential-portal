@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import {useNavigate, Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import Help from '../components/Help'
 import WideToolTip from '../components/WideToolTip';
 
@@ -27,18 +27,25 @@ const testText = <React.Fragment>
           </React.Fragment>
 
 export default function SignIn() {
+  //const history = useHistory();
+ 
+
   const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    
+    const loginData = {
       email: data.get('email'),
       password: data.get('password'),
-    });
+    };
+
+    navigate('/credentials', { state: loginData });
+    
    // could later have this make a fetch call, setting an Authorization bearer token
    // maybe from eduGain, then redirecting to the returned url.
-    window.open(`https://lci.onrender.com/demo/${data.get('password')}`)
+   // window.open(`https://lci.onrender.com/demo/${data.get('password')}`)
 }
 
   return (
@@ -57,7 +64,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in with your school account to see your available credentials.
+            Sign in to see your available credentials.
             <Help title={testText}/>
           </Typography>
           <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -92,7 +99,6 @@ export default function SignIn() {
             </Button>
             </WideToolTip>
           </Box>
-          <Link to="demo">Try our demo users.</Link>
         </Box>
       </Container>
     </ThemeProvider>

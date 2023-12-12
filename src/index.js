@@ -6,12 +6,13 @@ import {
 } from "react-router-dom";
 import './index.css';
 import Root from './routes/root';
-import CredentialList from './routes/credentialList';
-import Demo from './routes/Demo';
-
-import ErrorPage from './errorPage';
-import reportWebVitals from './reportWebVitals';
 import SignIn from './routes/SignIn';
+import CredentialList from './routes/credentialList';
+import CredentialCollector from './routes/credentialCollector';
+import Demo from './routes/Demo';
+import ErrorPage from './errorPage';
+
+import reportWebVitals from './reportWebVitals';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: "/demo",
         element: <Demo/>,
+      },
+      {
+        path: "/collector",
+        element: <CredentialCollector/>,
       }
     ],
   }

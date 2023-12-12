@@ -2,9 +2,11 @@ import * as React from 'react';
 import {useEffect, useState} from 'react';
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
+import Divider from '@mui/material/Divider'
+import Stack from '@mui/material/Stack'
 import CardActions from '@mui/material/CardActions';
-import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import CheckBox from '@mui/material/Checkbox'
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -12,34 +14,68 @@ import GlobalStyles from '@mui/material/GlobalStyles';
 import Container from '@mui/material/Container';
 import Help from '../components/Help'
 import Tooltip from '@mui/material/Tooltip';
-import {useLocation} from 'react-router-dom'
+import {useLocation, useNavigate} from 'react-router-dom'
+import defaultValues from '../data/defaultValues.js';
+import OrcidConfirmDialog from '../components/OrcidConfirmDialog';
 
-const walletHelp = "The 'add to DCC wallet' choice is a deep link that opens the LCW, passing in the challenge and LCI endpoint to which to post the DIDAuth and get the cred.  The 'Add to Other wallet' option would invoke other options like chapi."
-const LCWHelp = "Clicking this triggers the deep link to open the LCW, passing in the LCI collection endpoint and challenge.  The wallet then calls the endpoint, passing a DIDAuth, getting the credential in return."
-const ChapiHelp = "Triggers a CHAPI GET.  Wallet either a) returns DIDAuth and the LCP then calls the collection enpoint to get credential and then calls chapi 'store' to add it to the wallet OR b) wallet directly calls the LCI endpoint passing DIDAuth to get back credential."
-const pdfButtonHelp = "A PDF (with QR) version of this credential is available.  Click to download."
+//const exchangeHost = 'https://issuer.dcconsortium.org'
+const exchangeHost = process.env.REACT_APP_PUBLIC_EXCHANGE_HOST || 'http://localhost:4005' 
 
-function getDeepLink(cred) {
-  //)
- // const deepLink = `dccrequest://request?issuer=me&vc_request_url=${cred.collectionEndpoint}&challenge=${cred.challenge}&auth_type=bearer`
-  console.log('the cred deep link: ')
-  console.log(cred.deepLink)
-  return () => { window.location.href = cred.deepLink } 
- }
+const LCWHelp = "Adds this credential to the Digital Credentials Consortium Learner Credential Wallet."
+const ORCIDHelp = "Add this credential to your ORCID profile."
+const ORCIDBundleHelp = "Add to a bundle that you can thenb submit to ORCID in one step."
+const ORCIDBundleSubmitHelp = "Submit all selected credentials to ORCID in one step."
 
-function getPDF(cred) {
-  console.log('the cred pdf link: ')
-  console.log(cred.pdfLink)
-  return () => { window.location.href = cred.pdfLink } 
+async function postData(url = "", data = {}) {
+  const response = await fetch(url, {
+    method: "POST",
+    mode: "cors",
+    cache: "no-cache",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    redirect: "follow",
+    referrerPolicy: "no-referrer",
+    body: JSON.stringify(data)
+  });
+  return response.json();
 }
 
+function isOrcidCompatible(cred) {
+  return cred.metadata.orcidCompatible || cred.metadata.orcidBundle
+}
+
+function isOrcidSelectable(cred) {
+  return cred.metadata.orcidCompatible && ! cred.metadata.orcidBundle
+}
+
+
+
 function CredList() {
+
   const [list, setList] = useState(null)
   const [error, setError] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const location = useLocation();
+  const navigate = useNavigate()
+  const [isSelected, setIsSelected] = useState({});
+  
+  const handleChecked = cred => e => {
+    const { checked } = e.target;
+      setIsSelected({
+        ...isSelected,
+        [cred.retrievalId]: checked
+      });
+  };
+
+  function goToCollectorPage(cred) {
+    return () => {navigate('/collector', { state: {cred} })}
+  }
+
   useEffect(() => {
-    const queryParams = new URLSearchParams (location. search) ;
+    
+    const queryParams = new URLSearchParams (location.search) ;
     const listURI = queryParams.get ('list') ;
     if (listURI) {
       fetch(listURI)
@@ -54,8 +90,16 @@ function CredList() {
           setError(error)
         }
       )
+    } else if (location.state) {
+      const passedState = location.state
+       postData(`${exchangeHost}/exchange/setup`, defaultValues).then((response) => {
+        console.log("the data returned from the call:")
+        console.log(response)
+            setList(response)
+            setIsLoaded(true)
+        });
     } else {
-      setIsLoaded(true)
+     // setIsLoaded(true)
       setError({message:'You seem to have arrived at this page directly, but should have first logged in or been redirected from your institution.'})
     }
   }, []);
@@ -72,7 +116,7 @@ function CredList() {
    
       {isLoaded && 
     <>
-      <Container disableGutters maxWidth="sm" component="main" sx={{ pt: 8, pb: 6 }}>
+      <Container disableGutters maxWidth="md" component="main" sx={{ pt: 8, pb: 6 }}>
         <Typography
           component="h2"
           variant="h3"
@@ -80,11 +124,15 @@ function CredList() {
           color="text.primary"
           gutterBottom
         >
-          Credentials {list[0].holderName ? <span> for {list[0].holderName} </span>: ''}
+          Your Credentials
         </Typography>
         <Typography variant="h5" align="center" color="text.secondary" component="p">
-          Add a copy of your credential to the DCC LCW wallet, or choose another wallet. <br/>
+          You have the following verifiable credentials available for collection. <br/>
           
+          If you are adding to ORCID, you may add each individually 
+          or bundle them by adding each to the ORCID bundle and then
+          submit the bundle.
+
         </Typography>
       </Container>
       
@@ -99,10 +147,10 @@ function CredList() {
               sm={cred.title === 'Enterprise' ? 12 : 6}
               md={4}
             >
-              <Card>
+              <Card sx={{minHeight: '30vw'}}>
                 <CardHeader
-                  title={cred.displayTitle}
-                  subheader={cred.displaySubtitle}
+                  title={cred.metadata.displayTitle}
+                  subheader={cred.metadata.displaySubtitle}
                   titleTypographyProps={{ align: 'center' }}
                   subheaderTypographyProps={{
                     align: 'center',
@@ -112,72 +160,64 @@ function CredList() {
                       theme.palette.mode === 'light'
                         ? theme.palette.grey[200]
                         : theme.palette.grey[700],
+                    minHeight: '12vw'
                   }}
-                />
-                <CardContent>
-                 
-                  <ul>
-                    
-                      <Typography
-                        component="li"
-                        variant="subtitle1"
-                        align="center"
-                      >
-                        {cred.issuerName}
-                      </Typography>
-                      <Typography
-                        component="li"
-                        variant="subtitle1"
-                        align="center"
-                      >
-                        {cred.grantedDate}
-                      </Typography>
-                  </ul>
-                </CardContent>
-                <CardActions>
-                <Tooltip title={LCWHelp}>
-                  <Button fullWidth variant='outlined' onClick={getDeepLink(cred)}>
-                  <Typography
-                        align="center"
-                        color="black"
-                        fontSize=".7em"
-                      >
-                        Add to LCW
-                      </Typography>
-                  </Button>
-                  </Tooltip>
-                  <Tooltip title={ChapiHelp}>
-                 <Button fullWidth variant='outlined'>
+                ></CardHeader>
+         
+                <CardActions >
+              <Stack spacing={2} sx={{marginLeft:'auto', marginRight:'auto', marginBottom: '1.5em', marginTop: '1.5em'}}>
+                  <Tooltip title={LCWHelp}>
+                 <Button fullWidth variant='outlined' onClick={goToCollectorPage(cred)} sx={{backgroundColor:"lightblue"}}>
                  <Typography
                         
                         align="center"
                         color="black"
                         fontSize=".7em"
                       >
-                        Other wallet
+                        Add to Wallet
                       </Typography>
                   </Button>
                   </Tooltip>
-{ cred.pdfLink &&
-                  <Tooltip title={pdfButtonHelp}>
-                 <Button fullWidth variant='outlined' onClick={getPDF(cred)}>
-                 <Typography
-                        
-                        align="center"
-                        color="black"
-                        fontSize=".7em"
-                      >
-                        PDF is available
-                      </Typography>
-                  </Button>
+    { isOrcidCompatible(cred) &&
+<>
+                  <Tooltip title={ORCIDHelp}>
+                  <OrcidConfirmDialog buttonTitle="Add to my ORCID Profile"/>
                   </Tooltip>
+                  
+                  </>
 }
+    { isOrcidSelectable(cred)  &&
+                    <>
+                    <Divider orientation="horizontal" flexItem />
+                  <Tooltip title={ORCIDBundleHelp}>
+                 <Button fullWidth variant='outlined' sx={{backgroundColor:"#accc54"}}>
+                 <Typography
+                        
+                        align="center"
+                        color="black"
+                        fontSize=".7em"
+                      >
+                        Select for ORCID <CheckBox
+                      color="primary"
+                      checked={isSelected[cred.retrievalId]}
+                      onClick={handleChecked(cred)}
+                    />
+                      </Typography>
+                  </Button>
+                  </Tooltip>
+                  </>
+}
+                  </Stack>
+
                 </CardActions>
               </Card>
             </Grid>
           ))}
         </Grid>
-       
+        <Tooltip title={ORCIDBundleSubmitHelp}>
+        <OrcidConfirmDialog margin={5} buttonTitle="Add selected credentials to your ORCID Profile"/>
+                 
+                  </Tooltip>
       </Container>
       </>
   }
