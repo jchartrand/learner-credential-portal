@@ -70,7 +70,7 @@ function CredList() {
   };
 
   function goToCollectorPage(cred) {
-    return () => {navigate('/collector', { state: {cred} })}
+    return () => {navigate('/lcp/collector', { state: {cred} })}
   }
 
   useEffect(() => {

@@ -2,7 +2,7 @@
   "name": "learner-credential-portal",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://lcp.onrender.com",
+  "homepage": "/lcp/",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",

@@ -38,7 +38,7 @@ export default function Demo() {
           </Typography>
           <Box sx={{ mt: 1 }}>
           <Button
-              onClick={ () => { window.location.href = 'https://lci.onrender.com/demo/ian' } }
+              onClick={ () => { window.location.href = 'https://issuer.dcconsortium/lcp/demo/ian' } }
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}

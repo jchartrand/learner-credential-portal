@@ -16,24 +16,24 @@ import reportWebVitals from './reportWebVitals';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/lcp",
     element: <Root/>,
     errorElement: <ErrorPage/>,
     children: [
       {
-        path: "/",
+        path: "/lcp",
         element: <SignIn/>,
       },
       {
-        path: "/credentials",
+        path: "/lcp/credentials",
         element: <CredentialList/>,
       },
       {
-        path: "/demo",
+        path: "/lcp/demo",
         element: <Demo/>,
       },
       {
-        path: "/collector",
+        path: "/lcp/collector",
         element: <CredentialCollector/>,
       }
     ],

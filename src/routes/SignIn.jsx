@@ -41,7 +41,7 @@ export default function SignIn() {
       password: data.get('password'),
     };
 
-    navigate('/credentials', { state: loginData });
+    navigate('/lcp/credentials', { state: loginData });
     
    // could later have this make a fetch call, setting an Authorization bearer token
    // maybe from eduGain, then redirecting to the returned url.
