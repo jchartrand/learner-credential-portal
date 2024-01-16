@@ -76,7 +76,8 @@ function CredList() {
   useEffect(() => {
     
     const queryParams = new URLSearchParams (location.search) ;
-    const listURI = queryParams.get ('list') ;
+    const isDemo = queryParams.get('demo')
+    const listURI = queryParams.get('list') ;
     if (listURI) {
       fetch(listURI)
       .then(res => res.json())
@@ -90,8 +91,8 @@ function CredList() {
           setError(error)
         }
       )
-    } else if (location.state) {
-      const passedState = location.state
+    } else if (location.state || isDemo) {
+      //const passedState = location.state
        postData(`${exchangeHost}/exchange/setup`, defaultValues).then((response) => {
         console.log("the data returned from the call:")
         console.log(response)
@@ -144,7 +145,7 @@ function CredList() {
               item
               key={cred.id}
               xs={12}
-              sm={cred.title === 'Enterprise' ? 12 : 6}
+              sm={6}
               md={4}
             >
               <Card sx={{minHeight: '30vw'}}>
@@ -156,10 +157,7 @@ function CredList() {
                     align: 'center',
                   }}
                   sx={{
-                    backgroundColor: (theme) =>
-                      theme.palette.mode === 'light'
-                        ? theme.palette.grey[200]
-                        : theme.palette.grey[700],
+                    backgroundColor: "#2196f3",
                     minHeight: '12vw'
                   }}
                 ></CardHeader>

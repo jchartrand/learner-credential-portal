@@ -59,7 +59,7 @@ function Header() {
       
       <Button
        
-        sx={{ my: 1, mx: 1.5 }}
+        sx={{ my: 1, mx: 1.5, color:"black" }}
       >
         Help
       </Button>
