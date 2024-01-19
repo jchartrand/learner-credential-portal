@@ -17,6 +17,7 @@ import Tooltip from '@mui/material/Tooltip';
 import {useLocation, useNavigate} from 'react-router-dom'
 import defaultValues from '../data/defaultValues.js';
 import OrcidConfirmDialog from '../components/OrcidConfirmDialog';
+import QRCode from "react-qr-code";
 
 //const exchangeHost = 'https://issuer.dcconsortium.org'
 const exchangeHost = process.env.REACT_APP_PUBLIC_EXCHANGE_HOST || 'http://localhost:4005' 
@@ -52,6 +53,7 @@ function isOrcidSelectable(cred) {
 
 
 
+
 function CredList() {
 
   const [list, setList] = useState(null)
@@ -72,6 +74,10 @@ function CredList() {
   function goToCollectorPage(cred) {
     return () => {navigate('/lcp/collector', { state: {cred} })}
   }
+
+  function getDeepLink(cred) {
+    return () => { window.location.href = cred.directDeepLink } 
+   }
 
   useEffect(() => {
     
@@ -131,8 +137,8 @@ function CredList() {
           You have the following verifiable credentials available for collection. <br/>
           
           If you are adding to ORCID, you may add each individually 
-          or bundle them by adding each to the ORCID bundle and then
-          submit the bundle.
+          or bundle them by selecting those you want and then
+          submitting the resulting bundle.
 
         </Typography>
       </Container>
@@ -148,7 +154,7 @@ function CredList() {
               sm={6}
               md={4}
             >
-              <Card sx={{minHeight: '30vw'}}>
+              <Card sx={{minHeight: '36vw'}}>
                 <CardHeader
                   title={cred.metadata.displayTitle}
                   subheader={cred.metadata.displaySubtitle}
@@ -164,17 +170,29 @@ function CredList() {
          
                 <CardActions >
               <Stack spacing={2} sx={{marginLeft:'auto', marginRight:'auto', marginBottom: '1.5em', marginTop: '1.5em'}}>
+              <div style={{ height: "auto", margin: "0 auto", maxWidth: 64, width: "100%" }}>
+              <QRCode
+    size={256}
+    style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+    value={cred.directDeepLink}
+    viewBox={`0 0 256 256`}
+    />
+    </div> 
+             
                   <Tooltip title={LCWHelp}>
-                 <Button fullWidth variant='outlined' onClick={goToCollectorPage(cred)} sx={{backgroundColor:"lightblue"}}>
+                    
+                 <Button fullWidth variant='outlined' onClick={getDeepLink(cred)} sx={{backgroundColor:"lightblue"}}>
                  <Typography
                         
                         align="center"
                         color="black"
                         fontSize=".7em"
                       >
-                        Add to Wallet
+                        Click to Add to Wallet
                       </Typography>
+                      
                   </Button>
+                  
                   </Tooltip>
     { isOrcidCompatible(cred) &&
 <>
